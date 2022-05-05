@@ -37,8 +37,6 @@ var taskFormHandler = function(event) {
         };
 
         createTaskEl(taskDataObj);
-        console.log(taskDataObj);
-        console.log(taskDataObj.status);
     }
 };
 
@@ -59,6 +57,8 @@ var createTaskEl = function(taskDataObj) {
     taskDataObj.id = taskIdCounter;
 
     tasks.push(taskDataObj);
+
+    localStorage.setItem("tasks", tasks);
 
     // increase task counter for next unique id
     taskIdCounter++;
@@ -119,6 +119,8 @@ var completeEditTask = function(taskName, taskType, taskId) {
         }
     };
 
+    localStorage.setItem("tasks", tasks);
+
     alert("Task Updated!");
 
     // remove data attribute from form
@@ -143,7 +145,7 @@ var taskButtonHandler = function(event) {
 };
 
 var taskStatusChangeHandler = function(event) {
-    console.log(event.target.value);
+
 
     // find task list item based on event.target's data-task-id attribute
     var taskId = event.target.getAttribute("data-task-id");
@@ -167,21 +169,23 @@ var taskStatusChangeHandler = function(event) {
             tasks[i].status = statusValue;
         }
     }
-    console.log(tasks);
+
+
+    localStorage.setItem("tasks", tasks);
 };
 
 var editTask = function(taskId) {
-    console.log(taskId);
+
 
     // get task list item element
     var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
 
     // get content from task name and type
     var taskName = taskSelected.querySelector("h3.task-name").textContent;
-    console.log(taskName);
+
 
     var taskType = taskSelected.querySelector("span.task-type").textContent;
-    console.log(taskType);
+
 
     // write values of taskname and taskType to form to be edited
     document.querySelector("input[name='task-name']").value = taskName;
@@ -194,7 +198,6 @@ var editTask = function(taskId) {
 };
 
 var deleteTask = function(taskId) {
-    console.log(taskId);
     // find task list element with taskId value and remove it
     var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
     taskSelected.remove();
@@ -212,7 +215,13 @@ var deleteTask = function(taskId) {
 
     //reassign tasks array to be the same as updatedTaskArr
     tasks = updatedTaskArr;
+
+    localStorage.setItem("tasks", tasks);
 };
+
+var saveTasks = function() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
 // Create a new task
 formEl.addEventListener("submit", taskFormHandler);
